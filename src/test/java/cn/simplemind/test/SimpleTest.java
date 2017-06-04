@@ -15,12 +15,20 @@ public class SimpleTest {
      * @param  args
      */
     public static void main(String[] args) {
-        String str="222,";
+    	divisibleTest();
+    }
+    
+    private static void substringTest() {
+    	String str="222,";
         System.out.println(str.lastIndexOf(","));
         if (str.lastIndexOf(",") > 0) {
             str=str.substring(0,str.lastIndexOf(","));
         }
         System.out.println(str);
     }
-
+    
+    private static void divisibleTest() {
+    	// print 2
+    	System.out.println(5/2);
+    }
 }

@@ -1,5 +1,10 @@
 package cn.simplemind.jerry.algorithm.sort;
 
+import java.util.Date;
+import java.util.Iterator;
+
+import cn.simplemind.jerry.util.number.NumberUtil;
+
 /**
  * 希尔排序
  * （对于直接插入排序问题，数据量巨大时。）
@@ -11,17 +16,23 @@ package cn.simplemind.jerry.algorithm.sort;
  * @date   2017年5月26日 上午12:39:25
  */
 public class SheelSort {
-
-    /**
-     * @author wuyingdui
-     * @date   2017年5月26日 上午12:39:25
-     * @param  args
-     */
-    public static void main(String[] args) {
-        
-    }
     
-    public void sheelSort(int[] a) {
-        
+    public static void sort(int[] a) {
+        int d = a.length;
+        while (d > 0) {
+			d = d/2;
+			for (int x = 0; x < d; x++) {
+				// 进行直接插入排序
+				for (int i = x + d; i < a.length; i += d) {
+					int insertNum = a[i]; // 要插入的值
+					int j = i - d;
+					while (j >= 0 && insertNum < a[j]) {
+						a[j+d] = a[j];
+						j -= d;
+					}
+					a[j+d] = insertNum;
+				}
+			}
+		}
     }
 }

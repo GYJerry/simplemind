@@ -35,7 +35,6 @@ public class NumberUtil {
             } else {
                 arr[i] = random.nextInt(maxNum);
             }
-            System.out.println(arr[i]);
         }
         
         return arr;
