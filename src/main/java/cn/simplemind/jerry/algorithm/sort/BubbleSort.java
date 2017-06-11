@@ -12,16 +12,16 @@ package cn.simplemind.jerry.algorithm.sort;
  */
 public class BubbleSort {
 
-    /**
-     * @author wuyingdui
-     * @date   2017年5月26日 上午12:57:16
-     * @param  args
-     */
-    public static void main(String[] args) {
-        
-    }
-
-    public void bubbleSort(int[] a) {
-        
+    public static void sort(int[] a) {
+    	int tmp;
+    	for (int i = 0; i < a.length; i++) {
+			for (int j = 0; j < a.length-i-1; j++) {
+				if (a[j] > a[j+1]) {
+					tmp = a[j];
+					a[j] = a[j+1];
+					a[j+1] = tmp;
+				}
+			}
+		}
     }
 }

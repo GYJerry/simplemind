@@ -2,8 +2,10 @@ package cn.simplemind.test;
 
 import java.util.Date;
 
+import cn.simplemind.jerry.algorithm.sort.BubbleSort;
 import cn.simplemind.jerry.algorithm.sort.HeapSort;
 import cn.simplemind.jerry.algorithm.sort.InsertSort;
+import cn.simplemind.jerry.algorithm.sort.QuickSort;
 import cn.simplemind.jerry.algorithm.sort.SelectSort;
 import cn.simplemind.jerry.algorithm.sort.SheelSort;
 import cn.simplemind.jerry.util.number.NumberUtil;
@@ -45,6 +47,18 @@ public class SortTest {
     	HeapSort.sort(arr);
         endTime = new Date();      
         System.out.println("HeapSort time cost : " + (endTime.getTime() - startTime.getTime()) + "ms");
+        
+        arr = NumberUtil.generateRandomIntArray(numCnt, seed, maxNum);
+    	startTime = new Date();
+    	BubbleSort.sort(arr);
+        endTime = new Date();      
+        System.out.println("BubbleSort time cost : " + (endTime.getTime() - startTime.getTime()) + "ms");
+        
+        arr = NumberUtil.generateRandomIntArray(numCnt, seed, maxNum);
+    	startTime = new Date();
+    	QuickSort.sort(arr);
+        endTime = new Date();      
+        System.out.println("QuickSort time cost : " + (endTime.getTime() - startTime.getTime()) + "ms");
     }
 	
 	private static void printArr(int[] arr) {
