@@ -59,9 +59,13 @@ public class MergeSort {
 			k++;
 		}
         if (s == q+1) {
-			b[k++] = data[t++];
+			while (t <= r) {
+				b[k++] = data[t++];
+			}
 		} else {
-			b[k++] = data[s++];
+			while (s <= q) {
+				b[k++] = data[s++];
+			}
 		}
         
         for (int i = p; i <= r; i++) {

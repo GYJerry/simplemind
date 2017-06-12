@@ -5,7 +5,9 @@ import java.util.Date;
 import cn.simplemind.jerry.algorithm.sort.BubbleSort;
 import cn.simplemind.jerry.algorithm.sort.HeapSort;
 import cn.simplemind.jerry.algorithm.sort.InsertSort;
+import cn.simplemind.jerry.algorithm.sort.MergeSort;
 import cn.simplemind.jerry.algorithm.sort.QuickSort;
+import cn.simplemind.jerry.algorithm.sort.RadixSort;
 import cn.simplemind.jerry.algorithm.sort.SelectSort;
 import cn.simplemind.jerry.algorithm.sort.SheelSort;
 import cn.simplemind.jerry.util.number.NumberUtil;
@@ -22,7 +24,7 @@ public class SortTest {
     	Date endTime;
     	int numCnt = 20000;
     	int seed = 10;
-    	int maxNum = 10000;
+    	int maxNum = 1000000000;
         
         arr = NumberUtil.generateRandomIntArray(numCnt, seed, maxNum);
     	startTime = new Date();
@@ -59,6 +61,18 @@ public class SortTest {
     	QuickSort.sort(arr);
         endTime = new Date();      
         System.out.println("QuickSort time cost : " + (endTime.getTime() - startTime.getTime()) + "ms");
+        
+        arr = NumberUtil.generateRandomIntArray(numCnt, seed, maxNum);
+    	startTime = new Date();
+    	MergeSort.sort(arr);
+        endTime = new Date();      
+        System.out.println("MergeSort time cost : " + (endTime.getTime() - startTime.getTime()) + "ms");
+        
+        arr = NumberUtil.generateRandomIntArray(numCnt, seed, maxNum);
+    	startTime = new Date();
+    	RadixSort.sort(arr);
+        endTime = new Date();      
+        System.out.println("RadixSort time cost : " + (endTime.getTime() - startTime.getTime()) + "ms");
     }
 	
 	private static void printArr(int[] arr) {
