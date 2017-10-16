@@ -2,10 +2,7 @@ package cn.simplemind.jerry.algorithm.sort;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-
-import com.sun.xml.internal.fastinfoset.QualifiedName;
 
 import cn.simplemind.jerry.util.number.NumberUtil;
 

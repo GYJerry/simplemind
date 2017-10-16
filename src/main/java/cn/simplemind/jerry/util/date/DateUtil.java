@@ -17,6 +17,14 @@ import java.util.TimeZone;
  */
 public class DateUtil {
     
+    /**
+     * 限制该类的静态方法只能通过类名调用，不能进行实例化
+     * @throws Exception
+     */
+    private DateUtil() throws Exception {
+        throw new Exception("please do not initialiize me!");
+    }
+    
     public static final String TIMEF_FORMAT = "yyyy-MM-dd HH:mm:ss";
     
     public static final String ALIPAY_NOTIFY_DATETIME_FROMAT = "yyyy-MM-dd+HH:mm:ss";

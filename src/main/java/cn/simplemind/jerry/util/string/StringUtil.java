@@ -8,6 +8,14 @@ package cn.simplemind.jerry.util.string;
 public class StringUtil {
     
     /**
+     * 限制该类的静态方法只能通过类名调用，不能进行实例化
+     * @throws Exception
+     */
+    private StringUtil() throws Exception {
+        throw new Exception("please do not initialiize me!");
+    }
+    
+    /**
      * 生成随机字符串
      * 
      * @author wuyingdui

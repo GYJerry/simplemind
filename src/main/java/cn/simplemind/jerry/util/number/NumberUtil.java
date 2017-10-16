@@ -10,6 +10,14 @@ import java.util.Random;
 public class NumberUtil {
     
     /**
+     * 限制该类的静态方法只能通过类名调用，不能进行实例化
+     * @throws Exception
+     */
+    private NumberUtil() throws Exception {
+        throw new Exception("please do not initialiize me!");
+    }
+    
+    /**
      * 生成随机数数组
      * 
      * @author wuyingdui

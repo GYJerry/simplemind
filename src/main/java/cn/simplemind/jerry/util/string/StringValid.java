@@ -11,6 +11,14 @@ import java.util.regex.Pattern;
 public class StringValid {
     
     /**
+     * 限制该类的静态方法只能通过类名调用，不能进行实例化
+     * @throws Exception
+     */
+    private StringValid() throws Exception {
+        throw new Exception("please do not initialiize me!");
+    }
+    
+    /**
      * 校验手机合法性
      *
      * @author wuyingdui
