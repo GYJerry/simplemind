@@ -1,31 +1,42 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
-
-sourceCompatibility = 1.5
-version = '1.0'
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'Gradle Quickstart', 'Implementation-Version': version
-    }
+buildscript {
+	ext {
+		springBootVersion = '1.5.9.RELEASE'
+	}
+	repositories {
+		maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
 }
 
+apply plugin: 'java'
+apply plugin: 'eclipse'
+//apply plugin: 'org.springframework.boot'
+
+group = 'cn.simplemind'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.7
+
+// http://mvnrepository.com
+
 repositories {
+	maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
     mavenCentral()
 }
 
 dependencies {
-    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
-    testCompile group: 'junit', name: 'junit', version: '4.+'
-}
-
-test {
-    systemProperties 'property': 'value'
-}
-
-uploadArchives {
-    repositories {
-       flatDir {
-           dirs 'repos'
-       }
-    }
+    compile (
+    	'commons-collections:commons-collections:3.2',
+    	'org.apache.commons:commons-lang3:3.4',
+    	'org.apache.zookeeper:zookeeper:3.4.10',
+    	'io.netty:netty-all:4.1.22.Final'
+    	//'log4j:log4j:1.2.17',
+    	//'org.springframework.boot:spring-boot-starter',
+		//'org.springframework.boot:spring-boot-starter-web',
+    )
+    testCompile(
+    	'junit:junit:4.11'
+    )
 }

@@ -6,10 +6,21 @@ import java.io.FileReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.script.Bindings;
 import javax.script.Invocable;
@@ -17,6 +28,10 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+
+import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import cn.simplemind.jerry.util.number.NumberUtil;
 import cn.simplemind.test.enums.FlowStatusEnum;
@@ -93,7 +108,7 @@ public class SimpleTest {
         
         Human human = new Human(13, "Jerry");
         // father to child
-        Student jerry = (Student) human;
+        Student jerry = (Student) human; // 有问题
         
         Student helenStudent = new Student(10, "Helen", 30, "HuaMei");
         // child to father
@@ -391,6 +406,369 @@ public class SimpleTest {
     }
     
     /**
+     * 分页获取列表数据
+     * 
+     * @author wuyingdui
+     * @date   2017年10月17日 下午2:24:51
+     * @param  list
+     * @param  start
+     * @param  limit
+     * @return
+     */
+    public static <E> List<E> subList(List<E> list, int start, int limit) {
+        List<E> result = new ArrayList<E>();
+        if (list == null) {
+            return result;
+        }
+
+        start = Math.max(0, start); // 大于等于0
+        limit = Math.max(0, limit); // 大于等于0
+
+        int fromIndex = start;
+        fromIndex = Math.min(list.size(), fromIndex);
+        int toIndex = (limit > 0) ? (fromIndex + limit) : list.size();
+        toIndex = Math.min(list.size(), toIndex);
+        List<E> subList = list.subList(fromIndex, toIndex);
+
+        if (subList != null && !subList.isEmpty()) {
+            result.addAll(subList);
+        }
+
+        return result;
+    }
+    
+    /**
+     * java双重for循环跳出测试
+     * 
+     * @author wuyingdui
+     * @date   2017年10月26日 上午10:35:19
+     */
+    public static void jumpFromDoubleFor() {
+        for (int i = 0; i < 10; i++) {
+            if (i == 3) {
+                for (int j = 0; j < 5; j++) {
+                    if (j == 2) {
+                        System.out.println("jump form " + i + "." + j);
+                        break;
+                    }
+                }
+            }
+
+            System.out.println("here is " + i);
+        }
+    }
+    
+    public static void testGetClass() {
+        Integer i = new Integer(1000);
+        System.out.println(i.getClass());
+        
+        SortTest test = new SortTest();
+        test.hashCode();
+        System.out.println(test.getClass());
+    }
+    
+    public static void getHashCode() {
+        int hashCode = new HashCodeBuilder().append("aaaaa").toHashCode();
+        System.out.println(hashCode);
+        
+        SortTest test = new SortTest();
+        System.out.println(test.hashCode());
+        System.out.println(test);
+        
+        Integer num = 100;
+        System.out.println(num.hashCode());
+    }
+    
+    public static void testStringAddr() {
+        String string = "a";
+        System.out.println(string.hashCode());
+        string = string + "b";
+        System.out.println(string.hashCode());
+        SortTest test = new SortTest();
+        System.out.println(test.toString());
+        
+        String string2 = "a";
+        System.out.println(string2.hashCode());
+    }
+    
+    public static void testRegex() {
+        //接收键盘输入
+        Scanner input = new Scanner(System.in);
+        while (input.hasNext()) {
+           String str = input.nextLine();
+           //正则表达式对象
+           Pattern pattern = Pattern.compile("\\b\\w+\\b");
+           //生成匹配器
+           Matcher matcher = pattern.matcher(str);
+           //记录单词数量
+           int wordsCount = 0;
+           //遍历查找匹配，统计单词数量
+           while (matcher.find()) {
+               wordsCount++;
+           }
+           System.out.println(str + " 单词数：" + wordsCount);
+        }
+    }
+    
+    public static void encoding() {
+        String str = "汉字";
+        //读取字节
+        byte[] b = new byte[0];
+        try {
+            b = str.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        //重新生成一个新的字符串
+        System.out.println(new String(b));
+    }
+    
+    public static void testArrays() {
+        String[] strs = new String[3];
+        strs[0] = "aaaa"; strs[1] = "bbbb"; strs[2] = "cccc";
+        System.out.println(strs.hashCode());
+        List<String> list = Arrays.asList(strs);
+        System.out.println(list.hashCode());
+        
+        // list.add("cccc"); // 会报错，不能进行新增
+        
+        List<String> list2 = new ArrayList<>();
+    }
+    
+    /**
+     * 遍历数组的效率
+     * 
+     * @author wuyingdui
+     * @date   2017年11月27日 下午2:48:30
+     */
+    public static void testErgodic() {
+        //学生数量， 8万
+        int stuNum = 8 * 10000;
+
+        // List集合，记录所有学生的分数
+        List<Integer> scores = new LinkedList<>();
+        // List<Integer> scores = new ArrayList<Integer>(stuNum);
+
+        // 写入分数
+        for (int i = 0; i < stuNum; i++) {
+            scores.add(new Random().nextInt(150));
+        }
+
+        System.out.println("使用foreach遍历的方法");
+        // 记录开始计算时间
+        long start = System.currentTimeMillis();
+        int sum = 0;
+        // 遍历求和
+        for (int i : scores) {
+            sum += i;
+        }
+        // 除以人数，计算平均值
+        System.out.println("平均分是：" + sum / scores.size());
+        System.out.println("执行时间：" + (System.currentTimeMillis() - start) + "ms");
+
+        
+        System.out.println("使用迭代器方式遍历的方法");
+        start = System.currentTimeMillis();
+        sum = 0;
+        for (Iterator<Integer> iterator = scores.iterator(); iterator.hasNext();) {
+            sum += iterator.next();
+        }
+        System.out.println("平均分是：" + sum / scores.size());
+        System.out.println("执行时间：" + (System.currentTimeMillis() - start) + "ms");
+
+        
+        System.out.println("使用下标方式遍历的方法");
+        start = System.currentTimeMillis();
+        sum = 0;
+        for (int i = 0; i < scores.size(); i++) {
+            sum += scores.get(i);
+        }
+        System.out.println("平均分是：" + sum / scores.size());
+        System.out.println("执行时间：" + (System.currentTimeMillis() - start) + "ms");
+    }
+    
+    public static void testSubList() {
+        //定义一个包含两个字符串的列表
+        List<String> c = new ArrayList<String>();
+        c.add("A");
+        c.add("B");
+        //构造一个包含c列表的字符串列表
+        List<String> c1 = new ArrayList<String>(c);
+        //subList生成与c相同的列表
+        List<String> c2 = c.subList(0, c.size());
+        //c2增加一个元素
+        c2.add("C");
+        System.out.println("c.hashcode:" + c.hashCode());
+        System.out.println("c1.hashcode:" + c1.hashCode());
+        System.out.println("c2.hashcode:" + c2.hashCode());
+        System.out.println("c == c1? " + c.equals(c1));
+        System.out.println("c == c2? " + c.equals(c2));
+
+    }
+    
+    static class City implements Comparable<City> {
+        // 城市编码
+        private String code;
+        // 城市名称
+        private String name;
+
+        public City(String _code, String _name) {
+            code = _code;
+            name = _name;
+        }
+
+        @Override
+        public int compareTo(City o) {
+            // 按照城市名称排序
+            return new CompareToBuilder().append(name, o.name).toComparison();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (obj == this) {
+                return true;
+            }
+            if (obj.getClass() != getClass()) {
+                return false;
+            }
+            City city = (City) obj;
+            // 根据code判断是否相等
+            return new EqualsBuilder().append(code, city.code).isEquals();
+        }
+    }
+
+    public static void testCompare() {
+        List<City> cities = new ArrayList<City>();
+        cities.add(new City("021", "上海"));
+        cities.add(new City("021", "沪"));
+        // 排序
+        Collections.sort(cities);
+        // 查找对象
+        City city = new City("021", "沪");
+        // indexOf方法取得索引值
+        int index1 = cities.indexOf(city); // 使用equals方法
+        // binarySearch查找到索引值
+        int index2 = Collections.binarySearch(cities, city); // 使用compareTo方法
+        System.out.println("索引值(indexOf)：" + index1);
+        System.out.println("索引值（binarySearch)：" + index2);
+    }
+    
+    static class SortBean {
+        // 城市编码
+        private String num;
+        // 城市名称
+        private String name;
+
+        public SortBean(String _num, String _name) {
+            num = _num;
+            name = _name;
+        }
+
+        public String getNum() {
+            return num;
+        }
+
+        public void setNum(String num) {
+            this.num = num;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+    
+    public static void testSort() {
+        List<SortBean> list = new ArrayList<>();
+        list.add(new SortBean("001", "aaaaaaaaa"));
+        list.add(new SortBean("002", "bbbbbbbbb"));
+        list.add(null);
+        list.add(new SortBean("003", "ccccccccc"));
+        list.add(new SortBean(null, "ddddddddd"));
+        
+        Collections.sort(list, new Comparator<SortBean>() {
+
+            @Override
+            public int compare(SortBean o1, SortBean o2) {
+                if (o1 == null || o2 == null) {
+                    return -1;
+                }
+                else if (o1.getNum() == null || o2.getNum() == null) {
+                    return -1;
+                }
+                else {
+                    return o1.getNum().compareTo(o2.getNum());
+                }
+            }
+            
+        });
+        
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) == null) {
+                System.out.println("第"+i+"个值："+list.get(i));
+            }
+            else {
+                System.out.println("第"+i+"个值："+list.get(i).getNum()+","+list.get(i).getName());
+            }
+            
+        }
+    }
+    
+    public static void testShuffle() {
+        List<Integer> list = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
+        System.out.println(list);
+        Collections.shuffle(list);
+        System.out.println(list);
+        
+        list = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
+        Collections.shuffle(list);
+        System.out.println(list);
+        
+        list = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
+        Random rnd = new Random(100);
+        Collections.shuffle(list, rnd);
+        System.out.println(list);
+    }
+    
+    public static void testHashMap() {
+        final Runtime rt = Runtime.getRuntime();
+        Thread hook = new Thread() {
+            @Override
+            public void run() {
+                StringBuffer sb = new StringBuffer();
+                long heapMaxSize = rt.maxMemory() >> 20;
+                sb.append("最大可用内存：" + heapMaxSize + "M\n");
+                long total = rt.totalMemory() >> 20;
+                sb.append("堆内存大小：" + total + "M\n");
+                long free = rt.freeMemory() >> 20;
+                sb.append("空闲内存：" + free + "M");
+                System.out.println(sb);
+            }
+        };
+        // JVM终止前记录内存信息
+        rt.addShutdownHook(hook);
+        // 放入近40万键值对
+        Map<String, String> map = new HashMap<String, String>();
+        for (int i = 0; i < 393217; i++) {
+            map.put("key" + i, "vlaue" + i);
+        }
+        
+        /*List<String> list = new ArrayList<>();
+        for (int i = 0; i < 393217; i++) {
+            list.add("key" + i); list.add("vlaue" + i);
+        }*/
+        
+        System.out.println("ending...");
+    }
+    
+    /**
      * @author wuyingdui
      * @date   2017年8月21日 下午7:15:14
      * @param  args
@@ -409,6 +787,27 @@ public class SimpleTest {
         //stringBuilderTest();
         //nullObjToString();
         //enumTest();
-        listPageTest();
+        //listPageTest();
+        
+        //List<Integer> nums = Arrays.asList(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
+        //System.out.println(subList(nums, nums.size()-1, 4));
+        
+        //jumpFromDoubleFor();
+        //testGetClass();
+        //getHashCode();
+        
+        //testStringAddr();
+        
+        //testRegex();
+        //encoding();
+        //testArrays();
+        
+        //testErgodic();
+        //testSubList();
+        //testCompare();
+        //testSort();
+        
+        //testShuffle();
+        testHashMap();
     }
 }
