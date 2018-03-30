@@ -17,7 +17,7 @@ import java.util.Set;
  * @date   2018年3月24日 上午11:25:48
  */
 public class PlainNioServer {
-    public void serve(int port) throws IOException {
+    public static void serve(int port) throws IOException {
         ServerSocketChannel serverChannel = ServerSocketChannel.open();
         serverChannel.configureBlocking(false);
         ServerSocket ss = serverChannel.socket();
@@ -43,24 +43,24 @@ public class PlainNioServer {
                     if (key.isAcceptable()) {                //6
                         ServerSocketChannel server =
                                 (ServerSocketChannel)key.channel();
-                        SocketChannel client = server.accept();
-                        client.configureBlocking(false);
-                        client.register(selector, SelectionKey.OP_WRITE |
+                        SocketChannel clientChannel = server.accept();
+                        clientChannel.configureBlocking(false);
+                        clientChannel.register(selector, SelectionKey.OP_WRITE |
                                 SelectionKey.OP_READ, msg.duplicate());    //7
                         System.out.println(
-                                "Accepted connection from " + client);
+                                "Accepted connection from " + clientChannel);
                     }
                     if (key.isWritable()) {                //8
-                        SocketChannel client =
+                        SocketChannel clientChannel =
                                 (SocketChannel)key.channel();
                         ByteBuffer buffer =
                                 (ByteBuffer)key.attachment();
                         while (buffer.hasRemaining()) {
-                            if (client.write(buffer) == 0) {        //9
+                            if (clientChannel.write(buffer) == 0) {        //9
                                 break;
                             }
                         }
-                        client.close();                    //10
+                        clientChannel.close();                    //10
                     }
                 } catch (IOException ex) {
                     key.cancel();
@@ -72,5 +72,9 @@ public class PlainNioServer {
                 }
             }
         }
+    }
+    
+    public static void main(String[] args) throws IOException {
+        serve(9999);
     }
 }
