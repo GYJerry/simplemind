@@ -44,7 +44,7 @@ public class ZKOperation {
     
     public static void main(String[] args) {
         // znode path
-        String path = "/programZnode"; // Assign path to znode
+        final String path = "/programZnode"; // Assign path to znode
         
         // data in byte array
         byte[] data = "add by program".getBytes(); // Declare data
