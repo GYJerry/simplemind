@@ -9,12 +9,11 @@ import java.net.Socket;
  * @author yingdui_wu
  * @date   2018年3月29日 下午7:31:44
  */
-public class TestServer {
+public class BioClient {
     public static void main(String[] args) {
         
         testBioServer();
-        
-        //testNioServer();
+    	
     }
     
     /**
@@ -35,8 +34,9 @@ public class TestServer {
             
             @Override
             public void run() {
+            	Socket clientSocket = null;
                 try {
-                    Socket clientSocket = new Socket("127.0.0.1", 9999);
+                	clientSocket = new Socket("127.0.0.1", 9999);
                     System.out.println("socket"  + i + " timeout " + clientSocket.getSoTimeout());
                     //clientSocket.setSoTimeout(2000);
                     
@@ -87,6 +87,13 @@ public class TestServer {
                 } catch (IOException e) {
                     System.out.println("第" + i + "个网络连接发生异常...");
                     e.printStackTrace();
+                    if (clientSocket != null) {
+                    	try {
+							clientSocket.close();
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
                 }
             }
             
@@ -97,15 +104,5 @@ public class TestServer {
             new Thread(new ConnectThread(i)).start();
             
         }
-    }
-    
-    /**
-     * 测试NIO
-     * 
-     * @author yingdui_wu
-     * @date   2018年3月30日 上午10:07:22
-     */
-    public static void testNioServer() {
-        
     }
 }

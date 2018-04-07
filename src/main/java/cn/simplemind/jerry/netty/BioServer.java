@@ -10,7 +10,7 @@ import java.net.Socket;
  * @author yingdui_wu
  * @date   2018年3月24日 上午11:24:46
  */
-public class PlainBioServer {
+public class BioServer {
     public static void serve(int port) throws IOException {
         final ServerSocket socket = new ServerSocket(port);     //1
         try {
@@ -105,6 +105,7 @@ public class PlainBioServer {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            socket.close();
         }
     }
     
