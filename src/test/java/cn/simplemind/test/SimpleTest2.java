@@ -167,6 +167,21 @@ public class SimpleTest2 {
         System.out.println(true | false);
     }
     
+    public static void stringTest() {
+        String s1 = "Programming";
+        String s2 = new String("Programming");
+        String s3 = "Program" + "ming";
+        System.out.println(s1 == s2); // false
+        System.out.println(s1 == s3); // true
+        // 对于任意两个字符串 s 和 t，当且仅当 s.equals(t) 为 true 时，s.intern() == t.intern() 才为 true。
+        System.out.println(s1 == s1.intern()); // true
+        System.out.println(s1.equals(s1.intern())); // true
+        System.out.println(s1 == s2.intern()); // true
+        System.out.println(s1.equals(s2.intern())); // true
+        System.out.println(s1.intern().equals(s2.intern())); // true
+        System.out.println(s1.intern() == s2.intern()); // true
+    }
+    
     /**
      * @author wuyingdui
      * @date   2017年11月30日 下午2:23:10
@@ -180,6 +195,7 @@ public class SimpleTest2 {
         
         //System.out.println("aaaabbbb".indexOf("ccc"));
         //testRemove();
-        orTest();
+        //orTest();
+        stringTest();
     }
 }
