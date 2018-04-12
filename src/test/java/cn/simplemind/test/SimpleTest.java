@@ -233,7 +233,7 @@ public class SimpleTest {
         while (input.hasNextInt()) {
             int ii = input.nextInt();
             
-            System.out.println("\n====" + ii + " 的相等判断======");
+            System.out.println("\n==== " + ii + " 的相等判断======");
             // 两个通过new产生的Integer对象
             Integer i = new Integer(ii);
             Integer j = new Integer(ii);
@@ -243,11 +243,15 @@ public class SimpleTest {
             i=ii;
             j=ii;
             
-            System.out.println("基本类型转换的对象：" + (i==j));
+            System.out.println("基本类型自动装箱的对象：" + (i==j));
             // 通过静态方法生成一个实例
-            i=Integer.valueOf(ii); 
+            i = Integer.valueOf(ii); 
             j = Integer.valueOf(ii);
             System.out.println("valueOf产生的对象：" + (i == j));
+            
+            i = new Integer(ii);; 
+            j = ii;
+            System.out.println("new和自动装箱产生的对象：" + (i == j));
         }
     }
     
@@ -780,7 +784,7 @@ public class SimpleTest {
         //calBallArea(50.0);
         //scriptEngine();
         //tryInstanceof();
-        //integerCache();
+        integerCache();
         //contractBlock();
         //serialization();
         //testEqualNull();
@@ -808,6 +812,6 @@ public class SimpleTest {
         //testSort();
         
         //testShuffle();
-        testHashMap();
+        //testHashMap();
     }
 }

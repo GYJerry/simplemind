@@ -2,6 +2,8 @@ package cn.simplemind.test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
@@ -183,6 +185,44 @@ public class SimpleTest2 {
     }
     
     /**
+     * 字符串反转
+     * 
+     * @author yingdui_wu
+     * @date   2018年4月9日 下午10:22:50
+     * @param originStr
+     * @return
+     */
+    public static String reverse(String originStr) {
+        if(originStr == null || originStr.length() <= 1) 
+            return originStr;
+        return reverse(originStr.substring(1)) + originStr.charAt(0);
+    }
+    
+    public static void testDate() {
+		Date date = new Date(1970, 1, 1, 0, 0, 0);
+		System.out.println(date.getTime()/1000); // 59960880000
+		
+		Date testDate = new Date(59960880000L);
+		System.out.println(testDate);
+		
+		System.out.println();
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(1970, 1, 1, 0, 0, 0);
+		Date calDate = calendar.getTime();
+		System.out.println(calDate.getTime()/1000); // 2649600
+		
+		Date testDate2 = new Date(2649600);
+		System.out.println(testDate2);
+		
+		System.out.println();
+		
+		Date zeroDate = new Date(0);
+		System.out.println(zeroDate.getTime()/1000);
+		System.out.println(zeroDate);
+	}
+    
+    /**
      * @author wuyingdui
      * @date   2017年11月30日 下午2:23:10
      * @param  args
@@ -196,6 +236,9 @@ public class SimpleTest2 {
         //System.out.println("aaaabbbb".indexOf("ccc"));
         //testRemove();
         //orTest();
-        stringTest();
+        //stringTest();
+    	
+    	//System.out.println(reverse("wuyingdui"));
+    	testDate();
     }
 }
