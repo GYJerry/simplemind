@@ -1,11 +1,15 @@
 package cn.simplemind.test;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.Vector;
+import java.util.spi.TimeZoneNameProvider;
 
 /**
  * 
@@ -198,21 +202,13 @@ public class SimpleTest2 {
         return reverse(originStr.substring(1)) + originStr.charAt(0);
     }
     
-    public static void testDate() {
-		Date date = new Date(1970, 1, 1, 0, 0, 0);
-		System.out.println(date.getTime()/1000); // 59960880000
-		
-		Date testDate = new Date(59960880000L);
-		System.out.println(testDate);
-		
-		System.out.println();
-		
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(1970, 1, 1, 0, 0, 0);
+	public static void testDate() {
+		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"));
+		calendar.set(1970, 0, 1, 0, 0, 0);
 		Date calDate = calendar.getTime();
-		System.out.println(calDate.getTime()/1000); // 2649600
+		System.out.println(calDate.getTime());
 		
-		Date testDate2 = new Date(2649600);
+		Date testDate2 = new Date(calDate.getTime());
 		System.out.println(testDate2);
 		
 		System.out.println();
@@ -220,6 +216,62 @@ public class SimpleTest2 {
 		Date zeroDate = new Date(0);
 		System.out.println(zeroDate.getTime()/1000);
 		System.out.println(zeroDate);
+	}
+    
+    /**
+     * 日期相关的一些测试
+     * 
+     * @author yingdui_wu
+     * @date   2018年4月12日 下午7:25:20
+     */
+    public static void dateTest() {
+    	Calendar cal = Calendar.getInstance();
+        System.out.print(cal.get(Calendar.YEAR) + "  ");
+        System.out.print(cal.get(Calendar.MONTH) + "  ");    // 0 - 11
+        System.out.print(cal.get(Calendar.DATE) + "  ");
+        System.out.print(cal.get(Calendar.HOUR_OF_DAY) + "  ");
+        System.out.print(cal.get(Calendar.MINUTE) + "  ");
+        System.out.println(cal.get(Calendar.SECOND));
+ 
+        // Java 8
+        LocalDateTime dt = LocalDateTime.now();
+        System.out.print(dt.getYear() + "  ");
+        System.out.print(dt.getMonthValue() + "  ");     // 1 - 12
+        System.out.print(dt.getDayOfMonth() + "  ");
+        System.out.print(dt.getHour() + "  ");
+        System.out.print(dt.getMinute() + "  ");
+        System.out.println(dt.getSecond());
+        
+        // 获得毫秒数
+        System.out.println(System.currentTimeMillis());
+        System.out.println(Calendar.getInstance().getTimeInMillis());
+        System.out.println(Clock.systemDefaultZone().millis()); // java 8
+        System.out.println(new Date().getTime());
+        
+        // 如何取得某月的最后一天
+        Calendar calendar = Calendar.getInstance();
+        System.out.println(calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        System.out.println(calendar.getActualMaximum(Calendar.DAY_OF_WEEK));
+        System.out.println(calendar.getActualMaximum(Calendar.DAY_OF_WEEK_IN_MONTH));
+	}
+    
+    public static void catchException() {
+    	class Annoyance extends Exception {}
+    	class Sneeze extends Annoyance {}
+    	 
+    	try {
+			try {
+				throw new Sneeze();
+			} catch (Annoyance a) {
+				System.out.println("Caught Annoyance");
+				throw a;
+			}
+		} catch (Sneeze s) {
+			System.out.println("Caught Sneeze");
+			return;
+		} finally {
+			System.out.println("Hello World!");
+		}
 	}
     
     /**
@@ -239,6 +291,8 @@ public class SimpleTest2 {
         //stringTest();
     	
     	//System.out.println(reverse("wuyingdui"));
-    	testDate();
+    	//testDate();
+    	//dateTest();
+    	catchException();
     }
 }
