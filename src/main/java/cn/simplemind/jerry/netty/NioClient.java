@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * 
+ * NIO 客户端
  * @author yingdui_wu
  * @date   2018年4月6日 上午9:59:06
  */
@@ -62,26 +62,32 @@ public class NioClient {
                     	clientSocketChannel.register(selector, SelectionKey.OP_CONNECT);
                     }
                     
+                    try {
+                        Thread.sleep(6000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    
                     boolean stop = false;
 					while (!stop) {
-						selector.select(1000);
+						selector.select();
 						Set<SelectionKey> keys = selector.selectedKeys();
 						Iterator<SelectionKey> it = keys.iterator();
 						SelectionKey key = null;
 						while (it.hasNext()) {
 							key = it.next();
 							it.remove();
-							SocketChannel socketChannel = (SocketChannel) key.channel();
+							SocketChannel tmpClientSocketChannel = (SocketChannel) key.channel();
 							// OP_CONNECT 两种情况，链接成功或失败这个方法都会返回true
 							if (key.isConnectable()) {
 								// 由于非阻塞模式，connect只管发起连接请求，finishConnect()方法会阻塞到链接结束并返回是否成功
 								// 另外还有一个isConnectionPending()返回的是是否处于正在连接状态(还在三次握手中)
-								if (socketChannel.finishConnect()) {
+								if (tmpClientSocketChannel.finishConnect()) {
 									System.out.println("准备发送数据");
-									doWrite(socketChannel, msg);
+									doWrite(tmpClientSocketChannel, msg);
 									// 处理完后必须吧OP_CONNECT关注去掉，改为关注OP_READ
 									key.interestOps(SelectionKey.OP_READ);
-									// 或 socketChannel.register(selector, SelectionKey.OP_READ);
+									// 或 tmpClientSocketChannel.register(selector, SelectionKey.OP_READ);
 								} else {
 									// 链接失败，进程退出
 									System.out.println("链接失败，进程退出");
@@ -91,7 +97,7 @@ public class NioClient {
 							if (key.isReadable()) {
 								// 读取服务端的响应
 								ByteBuffer buffer = ByteBuffer.allocate(1024);
-								int readBytes = socketChannel.read(buffer);
+								int readBytes = tmpClientSocketChannel.read(buffer);
 								String content = "";
 								if (readBytes > 0) {
 									buffer.flip();
@@ -102,7 +108,7 @@ public class NioClient {
 								} else if (readBytes < 0) {
 									// 对端链路关闭
 									key.cancel();
-									socketChannel.close();
+									tmpClientSocketChannel.close();
 								}
 								System.out.println(content);
 								key.interestOps(SelectionKey.OP_READ);
@@ -128,7 +134,7 @@ public class NioClient {
 			}
         }
         
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 2; i++) {
             
             new Thread(new ConnectThread(i)).start();
             

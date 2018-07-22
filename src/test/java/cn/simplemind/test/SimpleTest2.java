@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.Vector;
-import java.util.spi.TimeZoneNameProvider;
 
 /**
  * 
@@ -176,16 +175,19 @@ public class SimpleTest2 {
     public static void stringTest() {
         String s1 = "Programming";
         String s2 = new String("Programming");
-        String s3 = "Program" + "ming";
-        System.out.println(s1 == s2); // false
-        System.out.println(s1 == s3); // true
+        String s3 = "Program" + "ming"; // ---> 相当于new StringBuilder("Program").append("ming").toString()？？？
+        String s4 = new StringBuilder("Program").append("ming").toString();
+        System.out.println("s1 == s2: " + (s1 == s2)); // false
+        System.out.println("s1 == s3: " + (s1 == s3)); // true
+        System.out.println("s1 == s4: " + (s1 == s4)); // false
+        System.out.println("s3 == s4: " + (s3 == s4)); // false
         // 对于任意两个字符串 s 和 t，当且仅当 s.equals(t) 为 true 时，s.intern() == t.intern() 才为 true。
-        System.out.println(s1 == s1.intern()); // true
-        System.out.println(s1.equals(s1.intern())); // true
-        System.out.println(s1 == s2.intern()); // true
-        System.out.println(s1.equals(s2.intern())); // true
-        System.out.println(s1.intern().equals(s2.intern())); // true
-        System.out.println(s1.intern() == s2.intern()); // true
+        System.out.println("s1 == s1.intern(): " + (s1 == s1.intern())); // true
+        System.out.println("s1.equals(s1.intern()): " + (s1.equals(s1.intern()))); // true
+        System.out.println("s1 == s2.intern(): " + (s1 == s2.intern())); // true
+        System.out.println("s1.equals(s2.intern()): " + (s1.equals(s2.intern()))); // true
+        System.out.println("s1.intern().equals(s2.intern()): " + (s1.intern().equals(s2.intern()))); // true
+        System.out.println("s1.intern() == s2.intern(): " + (s1.intern() == s2.intern())); // true
     }
     
     /**
@@ -274,6 +276,38 @@ public class SimpleTest2 {
 		}
 	}
     
+    public static String finalReturn() {
+        String s;
+        try {
+            s = "abc";
+            return s;
+        } finally {
+            s = "def";
+        }
+    }
+    
+    static class Annoyance extends Exception {}
+    static class Sneeze extends Annoyance {}
+    
+    public static void throwCatch() {
+        try {
+            try {
+                throw new Sneeze();
+            } 
+            catch ( Annoyance a ) {
+                System.out.println("Caught Annoyance");
+                throw a;
+            }
+        } 
+        catch ( Sneeze s ) {
+            System.out.println("Caught Sneeze");
+            return ;
+        }
+        finally {
+            System.out.println("Hello World!");
+        }
+    }
+    
     /**
      * @author wuyingdui
      * @date   2017年11月30日 下午2:23:10
@@ -293,6 +327,9 @@ public class SimpleTest2 {
     	//System.out.println(reverse("wuyingdui"));
     	//testDate();
     	//dateTest();
-    	catchException();
+    	//catchException();
+        
+        //System.out.println(finalReturn());
+        throwCatch();
     }
 }

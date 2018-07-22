@@ -2,110 +2,96 @@ package cn.simplemind.jerry.netty;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * BIO
+ * BIO 服务端
  * @author yingdui_wu
  * @date   2018年3月24日 上午11:24:46
  */
 public class BioServer {
+    
+    private static Object logPrintLock = new Object(); 
+    
     public static void serve(int port) throws IOException {
-        final ServerSocket socket = new ServerSocket(port);     //1
+        final ServerSocket socket = new ServerSocket(port);
         try {
             System.out.println("Bio server start...");
-            for (;;) {
-                final Socket clientSocket = socket.accept();    //2
-                System.out.println();
-                System.out.println("Accepted connection from " + clientSocket);
+            System.out.println();
+            
+            for (int i = 0; ; i++) {
+                final Socket clientSocket = socket.accept();
+                List<String> logs = new ArrayList<>();
+                logs.add("Accepted connection from " + clientSocket);
 
                 /**
                  * 使用单线程方式处理
                  */
-                InputStream input;
-                try {
-                    System.out.println("read start time: " + System.currentTimeMillis());
-                    input = clientSocket.getInputStream();
-                    byte[] b = new byte[100];
-                    int result = input.read(b);
-                    int k = 1;
-                    while(result > 0) {
-                        if (k == 1) {
-                            // 仅打印一次字符串
-                            System.out.println(new String(b));
-                        }
-                        result = input.read(b);
-                        k++;
-                    }
-                    
-                    input.close();
-                    System.out.println("read end time: " + System.currentTimeMillis());
-                    
-                    clientSocket.close();                //5
-                    
-                    long processStart = System.currentTimeMillis();
-                    for (int h = 0; h < 2100000000; h++) {
-                        // 做一个无效的循环，模拟对数据的处理操作
-                    }
-                    System.out.println("data process cost: " + (System.currentTimeMillis()-processStart));
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    try {
-                        clientSocket.close();
-                    } catch (IOException ex) {
-                        // ignore on close
-                    }
-                }
+                handlerRequest(clientSocket, 0, logs);
                 
                 /**
                  * 使用多线程方式处理
                  */
-                /*new Thread(new Runnable() {                        //3
+                /*int cnt = i;
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        
-                        InputStream input;
-                        try {
-                            System.out.println("read start time: " + System.currentTimeMillis());
-                            input = clientSocket.getInputStream();
-                            byte[] b = new byte[100];
-                            int result = input.read(b);
-                            int k = 1;
-                            while(result > 0) {
-                                if (k == 1) {
-                                    // 仅打印一次字符串
-                                    System.out.println(new String(b));
-                                }
-                                result = input.read(b);
-                                k++;
-                            }
-                            
-                            input.close();
-                            System.out.println("read end time: " + System.currentTimeMillis());
-                            clientSocket.close();                //5
-                            
-                            long processStart = System.currentTimeMillis();
-                            for (int h = 0; h < 2100000000; h++) {
-                                // 做一个无效的循环，模拟对数据的处理操作
-                            }
-                            System.out.println("data process cost: " + (System.currentTimeMillis()-processStart));
-        
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            try {
-                                clientSocket.close();
-                            } catch (IOException ex) {
-                                // ignore on close
-                            }
-                        }
+                        handlerRequest(clientSocket, cnt, logs);
                     }
-                }).start(); */                                       //6
+                }).start();*/
             }
         } catch (IOException e) {
             e.printStackTrace();
             socket.close();
+        }
+    }
+    
+    private static void handlerRequest(Socket clientSocket, int cnt, List<String> logs) {
+        InputStream input;
+        OutputStream output;
+        try {
+            logs.add("--" + cnt + " -- read start time: " + System.currentTimeMillis());
+            // 1、从客户端获取数据
+            input = clientSocket.getInputStream();
+            byte[] b = new byte[100];
+            input.read(b);
+            logs.add("--" + cnt + " -- " + new String(b));
+            logs.add("--" + cnt + " -- read end time: " + System.currentTimeMillis());
+            
+            // 2、暂停2s，模拟对数据的处理操作
+            Thread.sleep(2000);
+
+            // 3、写数据回客户端
+            output = clientSocket.getOutputStream();
+            output.write(("==== Hello, I'm " + cnt + " from server ====").getBytes("UTF-8"));
+            output.flush();
+            
+            // 4、关闭输入输出流。必须最后才关闭，如果在【1】之后就关闭输入流，将会导致socket也被关闭
+            input.close();
+            output.close();
+            
+            // 5、关闭socket连接
+            clientSocket.close();
+            
+            // 加锁保证每次打印的只是一条线程内的日志，不出现乱序
+            synchronized (logPrintLock) {
+                for (String log : logs) {
+                    System.out.println(log);
+                }
+                System.out.println();
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                clientSocket.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
     }
     

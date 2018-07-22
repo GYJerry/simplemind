@@ -253,6 +253,7 @@ public class SimpleTest {
             j = ii;
             System.out.println("new和自动装箱产生的对象：" + (i == j));
         }
+        input.close();
     }
     
     // test construct code block
