@@ -1,5 +1,6 @@
 package cn.simplemind.test;
 
+import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -286,6 +287,14 @@ public class SimpleTest2 {
         }
     }
     
+    public static String finalReturn2() {
+        try {
+            return "abc";
+        } finally {
+            return "def";
+        }
+    }
+    
     static class Annoyance extends Exception {}
     static class Sneeze extends Annoyance {}
     
@@ -306,6 +315,17 @@ public class SimpleTest2 {
         finally {
             System.out.println("Hello World!");
         }
+    }
+    
+    public static void testFloat() {
+        System.out.println(2.00-1.10);
+        
+        System.out.println(2.00f-1.10f);
+        
+        BigDecimal b1 = new BigDecimal(Double.toString(2.00));
+        BigDecimal b2 = new BigDecimal(Double.toString(1.10));
+        double result = b1.subtract(b2).doubleValue();
+        System.out.println(result);
     }
     
     /**
@@ -329,7 +349,9 @@ public class SimpleTest2 {
     	//dateTest();
     	//catchException();
         
-        //System.out.println(finalReturn());
-        throwCatch();
+        System.out.println(finalReturn());
+        //throwCatch();
+        //testFloat();
+        System.out.println(finalReturn2());
     }
 }
