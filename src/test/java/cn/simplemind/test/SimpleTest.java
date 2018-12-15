@@ -773,6 +773,25 @@ public class SimpleTest {
         System.out.println("ending...");
     }
     
+    static int a = 10;
+    
+    public static void testThreadScope() {
+        
+        for (int i = 0; i < 5; i++) {
+            int j = i;
+            Thread hook = new Thread() {
+                @Override
+                public void run() {
+
+                    System.out.println(j);
+                    System.out.println(a);
+                }
+            };
+            hook.start();
+        }
+        
+    }
+    
     /**
      * @author wuyingdui
      * @date   2017年8月21日 下午7:15:14
