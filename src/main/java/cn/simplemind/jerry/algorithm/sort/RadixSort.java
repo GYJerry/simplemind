@@ -42,27 +42,32 @@ public class RadixSort {
 		}
 
 		// 建立10个队列
-		List<List> queue = new ArrayList<List>();
+		// 每个十进制位上的数值范围为0～9
+		// 该列表中的每个队列用于存储每次遍历的过程中，同一位数值相同的数组元素，
+		// 每个数值x（0～9）存放在对应的queue.get(x)队列中
+		List<List<Integer>> queues = new ArrayList<List<Integer>>();
 		for (int i = 0; i < 10; i++) {
 			List<Integer> subQueue = new ArrayList<Integer>();
-			queue.add(subQueue);
+			queues.add(subQueue);
 		}
 
 		// 进行time次分配和收集
+		// 每次比较每个十进制位上的数值
 		for (int i = 0; i < time; i++) {
-			//分配数组元素
+			// 分配数组元素
 			for (int j = 0; j < a.length; j++) {
-				//得到数字的第i+1位数
-				int x = a[j] % (int)Math.pow(10, i+1) / (int)Math.pow(10, i);
-				queue.get(x).add(a[j]);
+				// 得到数字的第i+1位数
+				int x = a[j] % (int) Math.pow(10, i + 1) / (int) Math.pow(10, i);
+				queues.get(x).add(a[j]);
 			}
-			
+
 			// 元素计数器
 			int count = 0;
+			// 相当于按每个十进制位递增排序
 			for (int k = 0; k < 10; k++) {
-				while (queue.get(k).size() > 0) {
-					a[count++] = (Integer) queue.get(k).get(0);
-					queue.get(k).remove(0);
+				while (queues.get(k).size() > 0) {
+					a[count++] = queues.get(k).get(0);
+					queues.get(k).remove(0);
 				}
 			}
 		}

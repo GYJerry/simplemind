@@ -18,9 +18,7 @@ import java.util.Set;
 public class NioClient {
 	
 	public static void main(String[] args) {
-		
 		testNioServer();
-		
 	}
 	
 	/**

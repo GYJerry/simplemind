@@ -1,7 +1,7 @@
 package cn.simplemind.jerry.algorithm.sort;
 
+import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 
 import cn.simplemind.jerry.util.number.NumberUtil;
 
@@ -18,21 +18,27 @@ import cn.simplemind.jerry.util.number.NumberUtil;
 public class SheelSort {
     
     public static void sort(int[] a) {
-        int d = a.length;
-        while (d > 0) {
-			d = d/2;
-			for (int x = 0; x < d; x++) {
+        int k = a.length / 2;
+        while (k > 0) {
+			for (int x = 0; x < k; x++) {
 				// 进行直接插入排序
-				for (int i = x + d; i < a.length; i += d) {
+				for (int i = x + k; i < a.length; i += k) {
 					int insertNum = a[i]; // 要插入的值
-					int j = i - d;
+					int j = i - k;
 					while (j >= 0 && insertNum < a[j]) {
-						a[j+d] = a[j];
-						j -= d;
+						a[j+k] = a[j];
+						j -= k;
 					}
-					a[j+d] = insertNum;
+					a[j+k] = insertNum;
 				}
 			}
+			k = k/2;
 		}
     }
+    
+    public static void main(String[] args) {
+    	int[] arr = {32, 43, 23, 13, 5};
+    	sort(arr);
+    	System.out.println(Arrays.toString(arr));
+	}
 }

@@ -31,7 +31,10 @@ dependencies {
     	'commons-collections:commons-collections:3.2',
     	'org.apache.commons:commons-lang3:3.4',
     	'org.apache.zookeeper:zookeeper:3.4.10',
-    	'io.netty:netty-all:4.1.22.Final'
+    	'io.netty:netty-all:4.1.22.Final',
+    	'commons-logging:commons-logging:1.2',
+    	//'org.slf4j:slf4j-api:1.7.25',
+    	//'org.slf4j:slf4j-simple:1.7.25'
     	//'log4j:log4j:1.2.17',
     	//'org.springframework.boot:spring-boot-starter',
 		//'org.springframework.boot:spring-boot-starter-web',
